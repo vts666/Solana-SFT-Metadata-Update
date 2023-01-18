@@ -9,6 +9,12 @@ edited by me for Update SFT Metadata
 
 Install
 
+yarn init --yes
+&
+npm init --yes
+
+tsc -init --resolveJsonModule true
+
 yarn add @solana/web3.js @metaplex-foundation/js
 &
 npm install @solana/web3.js @metaplex-foundation/js

@@ -1,8 +1,8 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { Metaplex, keypairIdentity, bundlrStorage, Nft, Sft } from "@metaplex-foundation/js";
-import secret from 'keypair.json';
+import secret from 'keypair.json'; // path to your privatekey >>solana-keygen new -o keypair.json
 
-const QUICKNODE_RPC = 'rpc'; // 👈 CHANGE THIS
+const QUICKNODE_RPC = 'rpc'; // YOUR RPC
 const SOLANA_CONNECTION = new Connection(QUICKNODE_RPC);
 const WALLET = Keypair.fromSecretKey(new Uint8Array(secret)); // 👈 MAKE SURE THIS WALLET IS THE UPDATE AUTHORITY OF YOUR NFT
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
@@ -12,8 +12,8 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
         providerUrl: QUICKNODE_RPC,
         timeout: 60000,
     }));
-const MINT_ADDRESS = 'token'; // 👈 CHANGE THIS (MAKE SURE NFT IS MUTABLE)
-    
+const MINT_ADDRESS = 'token address'; // 👈 CHANGE THIS (MAKE SURE NFT IS MUTABLE)
+  
 /*
 
 async function uploadMetadata(imgUri: string, imgType: string, nftName: string, description: string, attributes: {trait_type: string, value: string}[]) {
@@ -40,15 +40,24 @@ async function uploadMetadata(imgUri: string, imgType: string, nftName: string, 
 
 */
 
-const metadataUri = "metadata"
+const metadataUri = "https://metadata" //link to your metadata
 
-async function updateNft(Sft:Nft|Sft, metadataUri: string) {
+const NEW_METADATA = {
+    imgName: 'Test', //change name, same as in the metadata
+    symbol: 'TST', //change symbol, same as in the metadata
+    creators: []
+}
+
+async function updateNft(Sft:Nft|Sft, metadataUri: string, symbol: string, creators: string) {
     console.log(`Step 2 - Updating NFT`);
     await METAPLEX
         .nfts()
         .update({
+            name: NEW_METADATA.imgName,
             nftOrSft: Sft,
-            uri: metadataUri
+            uri: metadataUri,
+            symbol: NEW_METADATA.symbol,
+            creators: []
         }, { commitment: 'finalized' });
     console.log(`   Success!🎉`);
     console.log(`   Updated NFT: https://solscan.io/token/${Sft.address}?cluster=devnet`);
@@ -68,7 +77,7 @@ async function main() {
     const newUri = await uploadMetadata(sft.json.image,NEW_METADATA.imgType,NEW_METADATA.imgName, NEW_METADATA.description, NEW_METADATA.attributes); 
     */
     //Step 3 - Update NFT
-    updateNft(sft, metadataUri);
+    updateNft(sft, metadataUri, NEW_METADATA.imgName, NEW_METADATA.symbol);
 }
 
 main();
